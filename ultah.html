@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Selamat Ulang Tahun</title>
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: "Segoe UI", sans-serif;
+      background: linear-gradient(135deg, #ffe6ef, #fff4cc, #dff8ff, #f9e7ff);
+      background-size: 400% 400%;
+      animation: backgroundShift 12s ease infinite;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    @keyframes backgroundShift {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    .hiasan {
+      position: absolute;
+      font-size: 30px;
+      opacity: 0.8;
+      animation: naik 8s linear infinite;
+      z-index: 0;
+      user-select: none;
+    }
+
+    .hiasan:nth-child(1) { left: 12%; top: 12%; }
+    .hiasan:nth-child(2) { right: 18%; top: 15%; animation-delay: 1.2s; }
+    .hiasan:nth-child(3) { left: 28%; bottom: 10%; animation-delay: 2s; }
+    .hiasan:nth-child(4) { right: 24%; bottom: 8%; animation-delay: 3s; }
+
+    @keyframes naik {
+      0% { transform: translateY(0) scale(1); opacity: 0; }
+      15% { opacity: 1; }
+      100% { transform: translateY(70vh) scale(1.3); opacity: 0; }
+    }
+
+    .card {
+      position: relative;
+      z-index: 2;
+      width: min(90vw, 900px);
+      background: rgba(255, 255, 255, 0.85);
+      border-radius: 28px;
+      padding: 32px 24px 20px;
+      box-shadow: 0 20px 45px rgba(255, 110, 140, 0.22);
+      text-align: center;
+      border: 2px solid rgba(255,255,255,0.8);
+      backdrop-filter: blur(6px);
+      animation: munculCard 1s ease-out;
+    }
+
+    @keyframes munculCard {
+      from {
+        opacity: 0;
+        transform: translateY(25px) scale(0.96);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    h1 {
+      margin: 0 0 10px;
+      color: #ff4d79;
+      font-size: clamp(2rem, 4vw, 3rem);
+      letter-spacing: 1px;
+      text-shadow: 2px 2px 0 #ffe1ea;
+    }
+
+    .cake {
+      font-size: 72px;
+      margin: 10px 0 8px;
+      display: inline-block;
+      animation: bounce 1.7s infinite ease-in-out;
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-12px); }
+    }
+
+    p {
+      margin: 0 auto 18px;
+      max-width: 640px;
+      color: #555;
+      font-size: 1.02em;
+      line-height: 1.7;
+    }
+
+    .button-group {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 24px;
+    }
+
+    .tombol {
+      border: none;
+      background: linear-gradient(135deg, #ff5c8a, #ff9a5d);
+      color: white;
+      padding: 16px 28px;
+      border-radius: 30px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 12px 22px rgba(255, 94, 120, 0.28);
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .tombol::before {
+      content: "";
+      position: absolute;
+      left: -35%;
+      top: 0;
+      width: 30%;
+      height: 100%;
+      background: rgba(255,255,255,0.3);
+      transform: skewX(-22deg);
+      animation: shine 2.3s infinite;
+    }
+
+    @keyframes shine {
+      0% { left: -35%; }
+      100% { left: 130%; }
+    }
+
+    .tombol:hover {
+      transform: translateY(-2px) scale(1.03);
+      box-shadow: 0 16px 26px rgba(255, 94, 120, 0.35);
+    }
+
+    .pesan-muncul {
+      margin: 0 auto 18px;
+      padding: 14px 18px;
+      border-radius: 20px;
+      background: linear-gradient(135deg, #fff1c8, #ffe1ee);
+      color: #b36500;
+      font-weight: bold;
+      display: none;
+      opacity: 0;
+      transform: translateY(10px);
+      transition: all 0.5s ease;
+      max-width: 620px;
+    }
+
+    .pesan-muncul.show {
+      display: block;
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(180px, 1fr));
+      gap: 26px;
+      opacity: 0;
+      transform: translateY(20px);
+      pointer-events: none;
+      max-height: 0;
+      overflow: hidden;
+      transition: opacity 0.7s ease, transform 0.7s ease, max-height 0.9s ease;
+      padding-top: 10px;
+    }
+
+    .gallery.show {
+      opacity: 1;
+      transform: translateY(0);
+      max-height: 1400px;
+      pointer-events: auto;
+    }
+
+    .frame {
+      background: #fffdfb;
+      padding: 14px 14px 18px;
+      border-radius: 10px;
+      box-shadow:
+        0 8px 18px rgba(0,0,0,0.1),
+        inset 0 0 0 3px rgba(120, 120, 120, 0.08);
+      border: 1px solid #eee;
+      position: relative;
+      transform: scale(0.8) rotate(-2deg);
+      opacity: 0;
+      transition: transform 0.7s ease, opacity 0.7s ease;
+    }
+
+    .gallery.show .frame {
+      opacity: 1;
+      transform: scale(1) rotate(0deg);
+    }
+
+    .gallery.show .frame:nth-child(1) { transition-delay: 0.1s; }
+    .gallery.show .frame:nth-child(2) { transition-delay: 0.25s; }
+    .gallery.show .frame:nth-child(3) { transition-delay: 0.4s; }
+    .gallery.show .frame:nth-child(4) { transition-delay: 0.55s; }
+
+    .frame::before,
+    .frame::after {
+      content: "";
+      position: absolute;
+      width: 42px;
+      height: 18px;
+      background: rgba(255,255,255,0.5);
+      border: 1px solid rgba(0,0,0,0.05);
+      top: 12px;
+      box-shadow: inset 0 0 8px rgba(255,255,255,0.5);
+    }
+
+    .frame::before {
+      left: 20px;
+      transform: rotate(-12deg);
+    }
+
+    .frame::after {
+      right: 20px;
+      transform: rotate(12deg);
+    }
+
+    .photo-wrap {
+      position: relative;
+      background: #f6f2ee;
+      padding: 8px;
+      border: 1px solid #ddd;
+      box-shadow: inset 0 0 0 2px rgba(255,255,255,0.8);
+    }
+
+    .photo {
+      display: block;
+      width: 100%;
+      height: 220px;
+      object-fit: cover;
+      border: 6px solid #f8f3f0;
+      box-shadow: inset 0 0 0 2px rgba(0,0,0,0.05);
+      background: linear-gradient(135deg, #f4f4f4, #ddd);
+    }
+
+    .caption {
+      margin-top: 12px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: #6c6c6c;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .spark {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: radial-gradient(circle, #fff 0%, #ffd54a 45%, transparent 70%);
+      animation: sparkle 1s ease-out infinite;
+      opacity: 0;
+      z-index: 10;
+    }
+
+    @keyframes sparkle {
+      0% { transform: scale(0.4) translateY(0); opacity: 0; }
+      30% { opacity: 1; }
+      100% { transform: scale(1.5) translateY(-18px); opacity: 0; }
+    }
+
+    .confetti {
+      position: absolute;
+      width: 10px;
+      height: 16px;
+      border-radius: 4px;
+      opacity: 0.9;
+      pointer-events: none;
+      animation: confettiFall 3s linear infinite;
+      z-index: 1;
+    }
+
+    @keyframes confettiFall {
+      0% { transform: translateY(-10vh) rotate(0deg); opacity: 0; }
+      20% { opacity: 1; }
+      100% { transform: translateY(110vh) rotate(540deg); opacity: 0; }
+    }
+
+    .balloon {
+      position: fixed;
+      bottom: -90px;
+      z-index: 4;
+      font-size: 44px;
+      pointer-events: none;
+      animation: balloonRise 5.5s ease-in forwards;
+    }
+
+    @keyframes balloonRise {
+      0% { transform: translateY(0) rotate(-8deg); opacity: 0; }
+      12% { opacity: 1; }
+      50% { transform: translateY(-55vh) translateX(25px) rotate(8deg); }
+      100% { transform: translateY(-125vh) translateX(-35px) rotate(-12deg); opacity: 0; }
+    }
+
+    .celebration-note {
+      position: fixed;
+      z-index: 12;
+      color: #fff;
+      font-size: clamp(1rem, 3vw, 1.6rem);
+      font-weight: 800;
+      text-shadow: 0 2px 5px rgba(95, 45, 80, 0.35);
+      pointer-events: none;
+      animation: notePop 2.8s ease-out forwards;
+    }
+
+    @keyframes notePop {
+      0% { transform: translateY(20px) scale(0.5) rotate(-8deg); opacity: 0; }
+      18% { transform: translateY(0) scale(1.05) rotate(4deg); opacity: 1; }
+      75% { opacity: 1; }
+      100% { transform: translateY(-85px) scale(0.9) rotate(-5deg); opacity: 0; }
+    }
+
+    .firework {
+      position: fixed;
+      width: 16px;
+      height: 16px;
+      z-index: 11;
+      border-radius: 50%;
+      pointer-events: none;
+      background: radial-gradient(circle, #fff 0 12%, #ffd54a 20%, transparent 68%);
+      animation: fireworkBurst 1.1s ease-out forwards;
+    }
+
+    @keyframes fireworkBurst {
+      0% { transform: scale(0.2); opacity: 0; box-shadow: none; }
+      25% { opacity: 1; }
+      100% {
+        transform: scale(1.15);
+        opacity: 0;
+        box-shadow:
+          0 -58px 0 -5px #ff4d79,
+          41px -41px 0 -5px #7bdff2,
+          58px 0 0 -5px #ffca3a,
+          41px 41px 0 -5px #7ae582,
+          0 58px 0 -5px #b892ff,
+          -41px 41px 0 -5px #ff9f1c,
+          -58px 0 0 -5px #ff7b8f,
+          -41px -41px 0 -5px #4cc9a3;
+      }
+    }
+
+    .popup {
+      position: fixed;
+      inset: 0;
+      background: rgba(24, 24, 24, 0.45);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 30;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s ease;
+    }
+
+    .popup.show {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .popup-card {
+      position: relative;
+      width: min(90vw, 420px);
+      min-height: 220px;
+      background: white;
+      border-radius: 22px;
+      padding: 24px 20px;
+      box-shadow: 0 16px 40px rgba(0,0,0,0.18);
+      text-align: center;
+      transform: translateY(20px) scale(0.96);
+      transition: transform 0.3s ease;
+    }
+
+    .popup.show .popup-card {
+      transform: translateY(0) scale(1);
+    }
+
+    .info-popup-card {
+      position: relative;
+      width: min(90vw, 430px);
+      background: linear-gradient(135deg, #fff8d6, #ffe4ef);
+      border: 3px solid rgba(255, 255, 255, 0.9);
+      border-radius: 24px;
+      padding: 30px 22px 24px;
+      box-shadow: 0 18px 45px rgba(255, 77, 121, 0.28);
+      text-align: center;
+      transform: translateY(20px) scale(0.94) rotate(-2deg);
+      transition: transform 0.3s ease;
+    }
+
+    .popup.show .info-popup-card {
+      transform: translateY(0) scale(1) rotate(0deg);
+    }
+
+    .info-popup-card .popup-emoji {
+      display: block;
+      margin-bottom: 10px;
+      font-size: 3rem;
+      animation: bounce 1s infinite ease-in-out;
+    }
+
+    .info-popup-card h3 {
+      margin: 0 0 10px;
+      color: #ff4d79;
+      font-size: clamp(1.4rem, 5vw, 2rem);
+    }
+
+    .info-popup-card p {
+      margin: 0 0 18px;
+      color: #805568;
+      font-weight: 700;
+    }
+
+    .popup-card h3 {
+      margin: 0 0 10px;
+      color: #ff4d79;
+      font-size: 1.5rem;
+    }
+
+    .popup-card p {
+      margin: 0 0 14px;
+      color: #555;
+    }
+
+    .popup-actions {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 12px;
+      margin-top: 18px;
+      height: 110px;
+      position: relative;
+    }
+
+    .popup-btn {
+      border: none;
+      border-radius: 999px;
+      padding: 12px 20px;
+      cursor: pointer;
+      font-weight: 700;
+      transition: transform 0.2s ease;
+      position: relative;
+      z-index: 1;
+    }
+
+    .popup-btn:hover {
+      transform: translateY(-1px);
+    }
+
+    .popup-btn.yes {
+      background: linear-gradient(135deg, #4cc9a3, #2bbf95);
+      color: white;
+    }
+
+    .popup-btn.no {
+      position: absolute;
+      background: linear-gradient(135deg, #ff7b8f, #ff6a68);
+      color: white;
+      left: 60%;
+      top: 58%;
+      transition: left 0.35s ease, top 0.35s ease, transform 0.2s ease;
+    }
+
+    @media (max-width: 600px) {
+      .gallery {
+        grid-template-columns: 1fr;
+      }
+
+      .photo {
+        height: 260px;
+      }
+
+      .button-group {
+        flex-direction: column;
+      }
+
+      .tombol {
+        width: 100%;
+      }
+
+      .popup-btn.no {
+        left: 55%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="hiasan">🎈</div>
+  <div class="hiasan">🎉</div>
+  <div class="hiasan">✨</div>
+  <div class="hiasan">🎂</div>
+
+  <div class="card">
+    <h1>Selamat Ulang Tahun! 🎉</h1>
+    <div class="cake">🎂</div>
+
+    <p>
+      SELAMAT ULANG TAHUN, <strong>Mbak Intan</strong>!<br>
+    </p>
+
+    <div class="button-group">
+      <button class="tombol" id="mainGiftBtn">Buka Hadiah</button>
+    </div>
+
+    <div class="pesan-muncul" id="pesanMuncul">
+      SEMOGA PANJANG UMURNYA, SEHAT SELALU, DAN SEMOGA SEMUA HARAPAN TERWUJUD YA! 🎁
+      DAN JANGAN LUPA TRANSFER DEK AFAN HEHE. 😆
+    </div>
+
+    <div class="gallery" id="gallery">
+      <div class="frame">
+        <div class="photo-wrap">
+          <img class="photo" src="Foto1.jpg.jpeg" alt="Foto 1" />
+        </div>
+      </div>
+
+      <div class="frame">
+        <div class="photo-wrap">
+          <img class="photo" src="Foto2.jpg.jpeg" alt="Foto 2" />
+        </div>
+      </div>
+
+      <div class="frame">
+        <div class="photo-wrap">
+          <img class="photo" src="Foto3.jpg.jpeg" alt="Foto 3" />
+        </div>
+      </div>
+
+      <div class="frame">
+        <div class="photo-wrap">
+          <img class="photo" src="Foto4.jpg.jpeg" alt="Foto 4" />
+        </div>
+      </div>
+
+      <div class="frame">
+        <div class="photo-wrap">
+          <img class="photo" src="Foto5.jpg.jpeg" alt="Foto 5" />
+        </div>
+      </div>
+
+      <div class="frame">
+        <div class="photo-wrap">
+          <img class="photo" src="foto6.jpg.jpeg" alt="Foto 6" />
+        </div>
+      </div>
+
+      <div class="frame">
+        <div class="photo-wrap">
+          <img class="photo" src="Foto7.jpg.jpeg" alt="Foto 7" />
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <audio id="laguUlangTahun" loop>
+    <source src="audio/lagu.mp3.mp3" type="audio/mpeg" />
+  </audio>
+
+  <div class="popup" id="openGiftPopup">
+    <div class="popup-card">
+      <h3>Yuk, buka hadiahnyaa!</h3>
+      <p>tapi transfer dek afan dulu yaa hehe.</p>
+
+      <div class="popup-actions">
+        <button class="popup-btn yes" id="acceptGift">Mau</button>
+        <button class="popup-btn no" id="cancelGift">Tidak</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="popup" id="alreadyOpenedPopup">
+    <div class="info-popup-card">
+      <span class="popup-emoji">😆🎁</span>
+      <h3>Udaaahh mauu apaaa lagiiii?</h3>
+      <p>Hadiah ulang tahunnya sudah dibuka semuaa yaa!</p>
+      <button class="popup-btn yes" id="closeAlreadyOpened">Hehe iyaaa</button>
+    </div>
+  </div>
+
+  <script>
+    const mainGiftBtn = document.getElementById("mainGiftBtn");
+    const openGiftPopup = document.getElementById("openGiftPopup");
+    const acceptGift = document.getElementById("acceptGift");
+    const cancelGift = document.getElementById("cancelGift");
+    const alreadyOpenedPopup = document.getElementById("alreadyOpenedPopup");
+    const closeAlreadyOpened = document.getElementById("closeAlreadyOpened");
+    const gallery = document.getElementById("gallery");
+    const pesan = document.getElementById("pesanMuncul");
+    const laguUlangTahun = document.getElementById("laguUlangTahun");
+
+    let noInterval = null;
+    let celebrationStarted = false;
+
+    function moveNoButtonRandomly() {
+      const card = document.querySelector(".popup-card");
+      const noBtn = document.getElementById("cancelGift");
+      const cardWidth = card.clientWidth;
+      const cardHeight = card.clientHeight;
+
+      const leftMin = 18;
+      const leftMax = Math.max(18, cardWidth - noBtn.offsetWidth - 20);
+      const topMin = 70;
+      const topMax = Math.max(70, cardHeight - noBtn.offsetHeight - 20);
+
+      const randomLeft = Math.random() * (leftMax - leftMin) + leftMin;
+      const randomTop = Math.random() * (topMax - topMin) + topMin;
+
+      noBtn.style.left = `${randomLeft}px`;
+      noBtn.style.top = `${randomTop}px`;
+    }
+
+    function startNoEscape() {
+      if (noInterval) return;
+      noInterval = setInterval(() => {
+        moveNoButtonRandomly();
+      }, 450);
+    }
+
+    function stopNoEscape() {
+      if (noInterval) {
+        clearInterval(noInterval);
+        noInterval = null;
+      }
+    }
+
+    function buatConfetti() {
+      const total = 35;
+      for (let i = 0; i < total; i++) {
+        const confetti = document.createElement("div");
+        confetti.className = "confetti";
+        confetti.style.left = Math.random() * 100 + "vw";
+        confetti.style.background = [
+          "#ff4d79", "#ffca3a", "#7bdff2", "#7ae582", "#ff9f1c", "#b892ff"
+        ][Math.floor(Math.random() * 6)];
+        confetti.style.animationDelay = (Math.random() * 2) + "s";
+        confetti.style.animationDuration = (Math.random() * 2 + 2.5) + "s";
+        document.body.appendChild(confetti);
+      }
+    }
+
+    function buatSparkle() {
+      for (let i = 0; i < 18; i++) {
+        setTimeout(() => {
+          const spark = document.createElement("div");
+          spark.className = "spark";
+          spark.style.left = Math.random() * window.innerWidth + "px";
+          spark.style.top = Math.random() * window.innerHeight + "px";
+          document.body.appendChild(spark);
+          setTimeout(() => spark.remove(), 1000);
+        }, i * 60);
+      }
+    }
+
+    function buatBalon() {
+      const balon = ["🎈", "🎈", "🎈", "🎉", "🎈", "🎈", "🎈", "🎈"];
+      balon.forEach((emoji, index) => {
+        const balloon = document.createElement("div");
+        balloon.className = "balloon";
+        balloon.textContent = emoji;
+        balloon.style.left = `${8 + Math.random() * 84}%`;
+        balloon.style.animationDelay = `${index * 0.22}s`;
+        balloon.style.animationDuration = `${4.8 + Math.random() * 1.8}s`;
+        document.body.appendChild(balloon);
+        setTimeout(() => balloon.remove(), 7500);
+      });
+    }
+
+    function buatUcapan() {
+      ["Yey! 🎉", "Horeee! 🎂", "Mbak Intan! 💖", "Bahagia selalu! ✨"].forEach((text, index) => {
+        setTimeout(() => {
+          const note = document.createElement("div");
+          note.className = "celebration-note";
+          note.textContent = text;
+          note.style.left = `${12 + Math.random() * 68}%`;
+          note.style.top = `${18 + Math.random() * 52}%`;
+          document.body.appendChild(note);
+          setTimeout(() => note.remove(), 3000);
+        }, index * 350);
+      });
+    }
+
+    function buatKembangApi() {
+      for (let i = 0; i < 8; i++) {
+        setTimeout(() => {
+          const firework = document.createElement("div");
+          firework.className = "firework";
+          firework.style.left = `${15 + Math.random() * 70}%`;
+          firework.style.top = `${12 + Math.random() * 48}%`;
+          document.body.appendChild(firework);
+          setTimeout(() => firework.remove(), 1200);
+        }, i * 180);
+      }
+    }
+
+    mainGiftBtn.addEventListener("click", () => {
+      if (celebrationStarted) {
+        alreadyOpenedPopup.classList.add("show");
+        return;
+      }
+
+      openGiftPopup.classList.add("show");
+      moveNoButtonRandomly();
+      startNoEscape();
+    });
+
+    closeAlreadyOpened.addEventListener("click", () => {
+      alreadyOpenedPopup.classList.remove("show");
+    });
+
+    acceptGift.addEventListener("click", () => {
+      if (celebrationStarted) return;
+      celebrationStarted = true;
+      openGiftPopup.classList.remove("show");
+      stopNoEscape();
+
+      gallery.classList.add("show");
+      pesan.classList.add("show");
+      laguUlangTahun.currentTime = 80;
+      laguUlangTahun.play();
+      buatConfetti();
+      buatSparkle();
+      buatBalon();
+      buatUcapan();
+      buatKembangApi();
+
+      mainGiftBtn.textContent = "Hadiah Sudah Dibuka";
+    });
+
+    cancelGift.addEventListener("click", () => {
+      moveNoButtonRandomly();
+      startNoEscape();
+    });
+
+    cancelGift.addEventListener("mouseenter", () => {
+      moveNoButtonRandomly();
+    });
+
+    cancelGift.addEventListener("mousemove", () => {
+      moveNoButtonRandomly();
+    });
+  </script>
+</body>
+</html>
